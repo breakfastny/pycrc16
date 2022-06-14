@@ -19,7 +19,15 @@
  *
  * **************************************************************************/
 
+#define PY_SSIZE_T_CLEAN
+
 #include <Python.h>
+
+#if PY_VERSION_HEX < 0x02050000 && !defined(PY_SSIZE_T_MIN)
+typedef int Py_ssize_t;
+#define PY_SSIZE_T_MAX INT_MAX
+#define PY_SSIZE_T_MIN INT_MIN
+#endif
 
 /* table for calculating CRC
  * this particular table was generated using pycrc v0.7.6, http://www.tty1.net/pycrc/
@@ -78,7 +86,7 @@ static const unsigned short CRC16_XMODEM_TABLE[256] = {
  */
 unsigned short calculateCRC16(unsigned short crc,
                               const unsigned char *data,
-                              int data_len,
+                              Py_ssize_t data_len,
                               const unsigned short * crc_table)
 {
     while (data_len-- > 0)
@@ -91,7 +99,7 @@ static PyObject *
 _crc16_crc16xmodem(PyObject *self, PyObject *args)
 {
     const unsigned char* data;
-    int data_len;
+    Py_ssize_t data_len;
     unsigned int crc = 0;
     unsigned int result;
 

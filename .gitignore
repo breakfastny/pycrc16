@@ -5,3 +5,5 @@ MANIFEST
 dist/
 build/
 /_tst
+
+*.egg-info
